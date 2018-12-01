@@ -1,0 +1,26 @@
+						Project #3: Huffman Coding
+	--------------------------------------------------------------------------------------------------------
+				CSC 172 (Data Structures and Algorithms), Spring 2018,
+					  	 University of Rochester
+
+	Author: Kathan Thakkar ()
+	This project contains the code for performing Huffman enoding-decoding (or compression-decompression) for
+	different files. The encoding and decoding procedures can be perfomed separately as we store the encoded
+	output and the frequency files during the encoding phase.
+	
+	Running the code is fairly straightforward. This submission contains only two files: README and
+	HuffmanSubmit.java. It depends on the files BinaryIn.java, BinaryOut.java and Huffman.java. Once all the
+	files are in the same directory, the code can be compiled as follows:
+
+	$ javac BinaryIn.java BinaryOut.java Huffman.java HuffmanSubmit.java
+
+	Running the file HuffmanSubmit.java will take the input files ur.jpg as well as alice30.txt and apply the
+	encoding and decoding procedure on both. This behavior can be changed through the main() function in the
+	file HuffmanSubmit.java. In order to run the code (on command line):
+
+	$ java HuffmanSubmit
+
+	Using an IDE, none of the commands need to be run and it's fairly straightforward. The commands above are
+	mentioned in case somebody needs to run this on command line.
+
+	---------------------------------------------------------------------------------------------------------
