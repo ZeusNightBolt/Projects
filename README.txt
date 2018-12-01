@@ -1,31 +1,39 @@
-Name: Kathan Thakkar and Will Kozar
-kthakkar@u.rochester.edu and wkozar@u.rochester.edu
-Classid: 74 and 141
-Project 4 (STREET MAPPING)
+==================================================
+Name: Kathan Thakkar
+NetID: kthakkar
+Homework Number: 10
+Lab Section: 
+==================================================
 
-Folder Content 
-DijkstraAlgorithm.java
-	This class calculates the shortest path between two input vertices
-Edge.java
-	This class is used to represent the define the edge type
-Graph.java
-	This class is used to represent the graph
-GraphCreator.java
-	This class creates the graph using the input text file
-Painter.java
-	Graphics class. Used as driver class as well. Creates image of graph
-Vertex.java
-	This class is used to define the Vertex type.
-README.txt
-	This file.
+The file containing the main function is PaintCanvasObjects.java.
+It creates six JFrames and then renders the Graphics for each of the six questions in the Homework.
+Each window contains the name of the Question it is an answer to on the top.
 
-This code takes in the text file specified in the command line. The bulk of the code executed comes from the Painter class. The Painter class determines which file to use, then creates a map with edges connecting the vertices, using lists of edges and vertices. Each edge is drawn by finding the coordinates of the two vertices for the specific edge, and drawing a line between them. Using Dijksra's algorithm, the shortest is determined. That path is colored green and the edges traversed in the path are printed.
+To run my submission, do the following:
+--------------------------------------------------
+Compilation:
+javac PaintCanvasObjects.java
+--------------------------------------------------
+Execution:
+java PaintCanvasObjects
+--------------------------------------------------
 
-We found difficulty with the implementation of dijkstra's algorithm, and used an online source (http://www.vogella.com/tutorials/JavaAlgorithmsDijkstra/article.html) for help. 
+This will open six windows, each with the Graphics rendering for one of the six questions.
 
+-> Question-1: Simple drawLines with different colors and proper coordinates.
 
-The graphing algorithm is O(|v|) where |v| is the number of vertices. The graph was mapped by iterating through the edges. The big datasets like nys.txt cause problems as the runtime is very slow and inefficient. The Dijkstra's algorithm i used is O(|V|^2). The program iterates through every vertice, and getPath iterates through the nodes to add the path vertices to the LinkedList.
+-> Question-2: A step function needed to increment / decrement the X and Y coordinates for the
+               line ends.
 
+-> Question-3: Simply repreat the way of increment / decrement for opposite corner Fans. Only the
+               starting point for them changes.
 
+-> Question-4: Draw lines such that they fill the area under a 90 degree arc of an ellipse curve.
+               Used equation of ellipse (x^2/a^2 + y^2/b^2 = 1), for finding out proper start and
+               endpoints for each line drawn. The code with provide a better understanding.
 
+-> Question-5: Again, use symmetry for opposite corner arcs and draw them. Once 4 was done, this was
+               simple enough.
 
+-> Question-6: Draw concentric circles, each having a constant increment in their Radius. The colors should
+               be different, alternate or looping. I did the looping part.
