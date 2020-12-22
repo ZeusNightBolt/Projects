@@ -1,9 +1,11 @@
-"""CSC 161 Project: Milestone II
+"""CSC Project: Final Milestone 
 
 Delusion Thakkar
 Lab Section 3:25-4:40pm
 Fall 2020
 """
+
+import numpy as np
 
 
 def opend_file(filename):
@@ -139,23 +141,28 @@ def transact(funds, stocks, qty, price, buy=False, sell=False):
     """
 
     if(buy is False and sell is False):
-        # the 'raise' keyword is followed by the instance of exception type 
+        # the 'raise' keyword is followed by the instance of exception type
         # (ValueError) which is
         # given a custom description ("Ambiguous transaction...")
-        raise ValueError("Ambiguous transaction! Can't determine whether to buy or sell!")
+        raise ValueError("Ambiguous transaction! Can't determine whether to"
+                         "buy or sell!")
 
     if(buy is True and sell is True):
-        # the 'raise' keyword is followed by the instance of exception type 
+        # the 'raise' keyword is followed by the instance of exception type
         # (ValueError) which is
         # given a custom description ("Ambiguous transaction...")
-        raise ValueError("Ambiguous transaction! Can't determine whether to buy or sell!")
+        raise ValueError("Ambiguous transaction! Can't determine whether to"
+                         "buy or sell!")
 
     if(buy is True and sell is False):
         if(float(funds) < float(qty*price)):
+
             # the 'raise' keyword is followed by the instance of exception type
             # (ValueError) which is
             # given a custom description ("Ambiguous transaction...")
-            raise ValueError(f"Insufficient funds to purchase {qty} stock at ${price:0.2f}!")
+            raise ValueError(f"Insufficient funds to purchase {qty} stock at"
+                             "${price:0.2f}!")
+            return funds, stocks
 
         else:
             stocks = int(qty + stocks)
@@ -164,7 +171,9 @@ def transact(funds, stocks, qty, price, buy=False, sell=False):
 
     if(buy is False and sell is True):
         if(stocks < qty):
+        
             raise ValueError(f"Insufficient stock owned to sell {qty} stocks!")
+            return funds, stocks
         else:
             stocks = int(stocks - qty)
             funds = float(funds + (price*qty))
@@ -242,22 +251,126 @@ def alg_moving_average(filename):
         maValueFinal = maValue / 20
         if(zzz[i] < (0.95*maValueFinal)):
             buyBool = True
-            transact(cash_balance, stocks_owned, 5, zzz[i], buy=buyBool,
-                     sell=sellBool)
+            cash_balance, stocks_owned = transact(
+                cash_balance, stocks_owned, 5, zzz[i], buy=buyBool,
+                sell=sellBool)
         elif(zzz[i] > (1.05*maValueFinal)):
             sellBool = True
-            transact(cash_balance, stocks_owned, 1, zzz[i], buy=buyBool,
-                     sell=sellBool)
+            cash_balance, stocks_owned = transact(
+                cash_balance, stocks_owned, 1, zzz[i], buy=buyBool,
+                sell=sellBool)
 
         if(i == (len(zzz) - 1)):
 
-            transact(cash_balance, stocks_owned, stocks_owned, zzz[i],
-                     sell=True)
+            cash_balance, stocks_owned = transact(cash_balance, stocks_owned,
+                                                  stocks_owned, zzz[i], sell=True)
+
+        buyBool = False
+        sellBool = False
 
     # Last thing to do, return two values: one for the number of stocks you
     # end up
     # owning after the simulation, and the amount of money you have after
     #  the simulation.
+    # Remember, all your stocks should be sold at the end!
+    return stocks_owned, cash_balance
+
+
+def alg_mine(filename):
+    """This function implements the student's custom trading algorithm.
+
+    Using the CSV stock data that should be loaded into your program, use
+    that data to make decisions using your own custome trading algorithm.
+
+    Also, any bookkeeping setup in Milestone I should be called/used here.
+
+    Args:
+        A filename, as a string.
+
+    Algorithm:
+    This algorithm uses the RSI Indicator to determine the appropriate buy or sell signal.
+
+    Returns:
+        Two values, stocks and balance OF THE APPROPRIATE DATA TYPE.
+
+    Prints:
+        Nothing.
+    """
+
+    RSI = 0
+    prices = []
+    buyBool = False
+    sellBool = False
+    zz = opend_file(filename)
+    zzz = parsed_data(zz)
+    counter = 0
+    stocks_owned = 0
+    cash_balance = float(1000.0)
+    sumzz = []
+    sumzzz = 0
+    RS = 0
+
+    # This will implement a 14 day relative strength index indicator (used for weekly swing trading)
+
+    while(counter < len(zzz)):
+
+        if zzz[counter] > float(10.00):
+            prices.append(zzz[counter])
+
+        counter = counter + 1
+
+    bullPlay = [0.0]*14
+    bearPlay = [0.0]*14
+
+    for i in range(len(prices)-14):
+
+        if(i == 0):
+            start = 1
+        else:
+            start = i
+
+        j = start
+
+        while j < i+14:
+
+            tempdiff = prices[j] - prices[j-1]
+            bullPlay[j-i] = tempdiff if tempdiff > 0 else 0.0
+            bearPlay[j-i] = abs(tempdiff) if tempdiff < 0 else 0.0
+
+            if(j == (len(prices) - 1)):
+
+                cash_balance, stocks_owned = transact(cash_balance, stocks_owned, stocks_owned, prices[j],
+                                                      sell=True)
+                return stocks_owned, cash_balance
+
+            j = j + 1
+
+        avg_bull = np.mean(bullPlay)
+        avg_bear = np.mean(bearPlay)
+
+        RS = avg_bull / avg_bear
+        RSI = 100 - (100/(1+RS))
+
+        if(int(RSI) > 70):
+
+            sellBool = True
+            cash_balance, stocks_owned = transact(cash_balance, stocks_owned, 1, prices[j], buy=buyBool,
+                                                  sell=sellBool)
+
+        if(int(RSI) < 30):
+
+            buyBool = True
+            cash_balance, stocks_owned = transact(cash_balance, stocks_owned, 5, prices[j], buy=buyBool,
+                                                  sell=sellBool)
+
+        bullPlay = [0.0]*14
+        bearPlay = [0.0]*14
+        buyBool = False
+        sellBool = False
+
+    # Last thing to do, return two values: one for the number of stocks you end up
+    # owning after the simulation, and the amount of money you have after
+    # the simulation.
     # Remember, all your stocks should be sold at the end!
     return stocks_owned, cash_balance
 
@@ -268,6 +381,9 @@ def main():
 
     # Call your moving average algorithm, with the filename to open.
     alg1_stocks, alg1_balance = alg_moving_average(filename)
+
+    # Now, call your custom algorithm!
+    alg2_stocks, alg2_balance = alg_mine(filename)
 
     # Print results of the moving average algorithm, returned above:
     print("The results are... {0:} {1:}".format(alg1_stocks, alg1_balance))
